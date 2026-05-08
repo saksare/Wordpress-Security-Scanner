@@ -1,0 +1,40 @@
+name: WordPress Security Scanner
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_url:
+        description: 'Website URL to scan (example: https://example.com)'
+        required: true
+        type: string
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - run: pip install -r requirements.txt
+      
+      - name: Run WordPress Scanner
+        run: |
+          python scanner/main.py --url "${{ github.event.inputs.target_url }}" --output scan_result.json
+      
+      - name: Display Results in Job Summary
+        run: |
+          echo "## 🛡️ WordPress Security Scan Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo '```json' >> $GITHUB_STEP_SUMMARY
+          cat scan_result.json >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+      
+      - name: Upload JSON Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-scan-report
+          path: scan_result.json
