@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WP Security Scanner | WordPress Vulnerability Scanner by Sherjeel Khan</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="badge">🛡️ Professional Security Scanner</div>
+            <h1>WordPress <span class="highlight">Security Scanner</span></h1>
+            <p>Enter any WordPress website URL to detect vulnerabilities, security headers, exposed files, and more.</p>
+        </div>
+
+        <!-- Scan Form -->
+        <div class="scan-card">
+            <div class="input-group">
+                <label for="targetUrl">Website URL</label>
+                <div class="url-input-wrapper">
+                    <span class="url-prefix">https://</span>
+                    <input type="text" id="targetUrl" placeholder="example.com" class="url-input">
+                </div>
+                <p class="input-hint">Example: wordpress.org, yourwebsite.com (no https:// needed)</p>
+            </div>
+            
+            <button id="scanBtn" class="scan-button">
+                <span class="btn-text">Run Security Scan</span>
+                <span class="btn-icon">→</span>
+            </button>
+        </div>
+
+        <!-- Loading State (hidden by default) -->
+        <div id="loading" class="loading-card hidden">
+            <div class="spinner"></div>
+            <h3>Scanning in Progress...</h3>
+            <p>GitHub Action triggered. Results will appear here in 30-60 seconds.</p>
+            <a href="#" id="actionLink" target="_blank" class="action-link">View scan progress on GitHub →</a>
+        </div>
+
+        <!-- Results Section (hidden by default) -->
+        <div id="results" class="results-card hidden">
+            <div class="results-header">
+                <h2>📊 Scan Results</h2>
+                <div id="scoreBox" class="score-box"></div>
+            </div>
+            
+            <div id="findingsList" class="findings-list"></div>
+            
+            <div class="results-footer">
+                <button id="downloadReport" class="download-btn">📥 Download JSON Report</button>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>Developed by <strong>Sherjeel Khan</strong> | Senior Full Stack Developer</p>
+            <p>14+ years PHP, JavaScript, Python, API Integrations, CRM Systems</p>
+            <div class="social-links">
+                <a href="https://sherjeelkhan.com">Website</a> |
+                <a href="https://linkedin.com/in/sherjeel-khan">LinkedIn</a> |
+                <a href="https://github.com/YOUR_USERNAME">GitHub</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
