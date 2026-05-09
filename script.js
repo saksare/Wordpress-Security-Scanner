@@ -163,6 +163,8 @@ function triggerScan() {
     // Update and open link
     actionLink.href = actionsUrl;
     window.open(actionsUrl, '_blank');
+    // Start checking for results
+    startCheckingForResults();
     
     // Instructions
     setTimeout(() => {
