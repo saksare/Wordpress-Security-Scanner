@@ -151,23 +151,24 @@ function triggerScan() {
     
     // Store URL for later
     localStorage.setItem('lastScannedUrl', fullUrl);
+    localStorage.setItem('pendingScanUrl', fullUrl);
     
     // Show loading
     loadingDiv.classList.remove('hidden');
     resultsDiv.classList.add('hidden');
     
-    // Update action link
-    actionLink.href = GITHUB_ACTIONS_URL;
+    // Your specific GitHub Actions URL
+    const actionsUrl = 'https://github.com/saksare/Wordpress-Security-Scanner/actions/workflows/scan.yml';
     
-    // Open GitHub Actions in new tab
-    window.open(GITHUB_ACTIONS_URL, '_blank');
+    // Update and open link
+    actionLink.href = actionsUrl;
+    window.open(actionsUrl, '_blank');
     
-    // Instructions alert
+    // Instructions
     setTimeout(() => {
-        alert(`✅ Scan trigger ready!\n\n1. Click "Run workflow"\n2. Enter this URL: ${fullUrl}\n3. Click "Run workflow"\n4. Wait 30-60 seconds\n5. Results will appear here automatically after scan completes.\n\nCheck the "Actions" tab for progress.`);
+        alert(`🚀 WordPress Security Scanner\n\n📋 Copy this URL:\n${fullUrl}\n\n🔗 In the GitHub tab that opened:\n1. Click the "Run workflow" button\n2. Paste the URL above\n3. Click "Run workflow"\n\n⏱️ Wait 60 seconds, then refresh this page for results!`);
     }, 500);
 }
-
 // Download report as JSON
 function downloadReport() {
     if (!currentResults) {
