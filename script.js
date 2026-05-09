@@ -1,7 +1,7 @@
 // WordPress Security Scanner - Dashboard Script
 // Author: Sherjeel Khan
 
-const GITHUB_REPO = 'YOUR_USERNAME/wp-security-scanner'; // CHANGE THIS
+const GITHUB_REPO = 'saksare/wp-security-scanner'; // CHANGE THIS
 const GITHUB_ACTIONS_URL = `https://github.com/${GITHUB_REPO}/actions/workflows/scan.yml`;
 
 // DOM Elements
