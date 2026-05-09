@@ -215,3 +215,44 @@ function startWaitingForReport() {
 
 // Update the action link with correct username
 actionLink.href = GITHUB_ACTIONS_URL;
+
+// Check for new results periodically after triggering scan
+let resultCheckInterval = null;
+
+function startCheckingForResults() {
+    if (resultCheckInterval) clearInterval(resultCheckInterval);
+    
+    let attempts = 0;
+    resultCheckInterval = setInterval(async () => {
+        attempts++;
+        
+        const latestScanUrl = 'https://raw.githubusercontent.com/saksare/Wordpress-Security-Scanner/main/docs/results/latest-scan.json';
+        
+        try {
+            const response = await fetch(latestScanUrl);
+            if (response.ok) {
+                const results = await response.json();
+                
+                // Check if this is a new scan (compare timestamp)
+                const lastScanTime = localStorage.getItem('lastScanTime');
+                if (results.scan_date !== lastScanTime) {
+                    localStorage.setItem('lastScanTime', results.scan_date);
+                    displayResults(results);
+                    loadingDiv.classList.add('hidden');
+                    resultsDiv.classList.remove('hidden');
+                    clearInterval(resultCheckInterval);
+                    
+                    // Show success message
+                    alert('✅ Scan complete! Results are now displayed.');
+                }
+            }
+        } catch (error) {
+            // Still waiting for results
+            if (attempts > 30) { // Stop after 5 minutes
+                clearInterval(resultCheckInterval);
+                loadingDiv.classList.add('hidden');
+                alert('Scan taking longer than expected. Please refresh the page manually in a few minutes.');
+            }
+        }
+    }, 10000); // Check every 10 seconds
+}
