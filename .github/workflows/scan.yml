@@ -11,6 +11,8 @@ on:
 jobs:
   scan:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Allow pushing results back to repo
     
     steps:
       - uses: actions/checkout@v4
@@ -23,18 +25,29 @@ jobs:
       
       - name: Run WordPress Scanner
         run: |
-          python scanner/main.py --url "${{ github.event.inputs.target_url }}" --output scan_result.json
+          python scanner/main.py --url "${{ github.event.inputs.target_url }}" --output latest-scan.json
       
-      - name: Display Results in Job Summary
+      - name: Create results directory
         run: |
-          echo "## 🛡️ WordPress Security Scan Results" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo '```json' >> $GITHUB_STEP_SUMMARY
-          cat scan_result.json >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
+          mkdir -p docs/results
+          mv latest-scan.json docs/results/
+          
+          # Also save with timestamp
+          cp docs/results/latest-scan.json docs/results/scan-$(date +'%Y%m%d-%H%M%S').json
       
-      - name: Upload JSON Report
-        uses: actions/upload-artifact@v4
-        with:
-          name: security-scan-report
-          path: scan_result.json
+      - name: Update scan history
+        run: |
+          echo "[" > docs/results/history.json
+          ls docs/results/scan-*.json | head -5 | while read file; do
+            cat "$file" >> docs/results/history.json
+            echo "," >> docs/results/history.json
+          done
+          echo "{}]" >> docs/results/history.json
+      
+      - name: Commit and push results
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "actions@github.com"
+          git add docs/results/
+          git commit -m "Add scan results for ${{ github.event.inputs.target_url }}" || exit 0
+          git push
