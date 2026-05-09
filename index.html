@@ -67,5 +67,37 @@
     </div>
 
     <script src="script.js"></script>
+    <script>
+// Auto-load latest scan results
+    async function loadLatestResults() {
+    const resultsDiv = document.getElementById('results');
+    const loadingDiv = document.getElementById('loading');
+    
+    // Try to fetch the latest scan
+    const latestScanUrl = 'https://raw.githubusercontent.com/saksare/Wordpress-Security-Scanner/main/docs/results/latest-scan.json';
+    
+    try {
+        const response = await fetch(latestScanUrl);
+        if (response.ok) {
+            const results = await response.json();
+            displayResults(results);
+            loadingDiv.classList.add('hidden');
+            resultsDiv.classList.remove('hidden');
+        } else {
+            console.log('No scan results yet. Run a scan first!');
+        }
+    } catch (error) {
+        console.log('No results available');
+    }
+}
+
+// Call when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    loadLatestResults();
+    // Refresh every 10 seconds if waiting
+    setInterval(loadLatestResults, 10000);
+});
+</script>
+    
 </body>
 </html>
